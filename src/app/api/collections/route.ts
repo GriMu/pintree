@@ -6,8 +6,9 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export async function GET(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
-    const publicOnly = searchParams.get('publicOnly') === 'true';
+    const publicOnly = !session;
     
     // Retrieve collections list, optionally filtering for public collections
     const collections = await prisma.collection.findMany({
